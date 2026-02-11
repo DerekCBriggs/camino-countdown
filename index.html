@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Camino Countdown">
+    <title>Camino Countdown</title>
+
+    <!-- PWA Support -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#1E3A5F">
+
+    <!-- iOS Icons -->
+    <link rel="apple-touch-icon" href="icons/icon-152.png">
+    <link rel="apple-touch-icon" sizes="192x192" href="icons/icon-192.png">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="icons/icon-96.png">
+    <style>
+        :root {
+            --gold: #D4AF37;
+            --gold-light: #F4E4BC;
+            --blue-dark: #1E3A5F;
+            --blue-medium: #2E5A8F;
+            --blue-light: #4A7FB5;
+            --cream: #FDF8E8;
+            --brown: #8B4513;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: linear-gradient(135deg, var(--blue-dark) 0%, var(--blue-medium) 50%, var(--blue-light) 100%);
+            min-height: 100vh;
+            color: var(--cream);
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header with Shell */
+        .header {
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .shell-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 15px;
+        }
+
+        .shell-icon svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+        }
+
+        h1 {
+            font-size: 2rem;
+            color: var(--gold);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            letter-spacing: 2px;
+        }
+
+        .subtitle {
+            font-style: italic;
+            color: var(--gold-light);
+            margin-top: 5px;
+            font-size: 1rem;
+        }
+
+        /* Current Date */
+        .current-date {
+            text-align: center;
+            font-size: 1.1rem;
+            color: var(--gold-light);
+            margin: 15px 0;
+            padding: 10px;
+            border-top: 1px solid rgba(212, 175, 55, 0.3);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+        }
+
+        /* Countdown Display */
+        .countdown-section {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            padding: 30px 20px;
+            text-align: center;
+            margin: 20px 0;
+            border: 2px solid var(--gold);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .days-number {
+            font-size: 5rem;
+            font-weight: bold;
+            color: var(--gold);
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.4);
+            line-height: 1;
+        }
+
+        .days-label {
+            font-size: 1.5rem;
+            color: var(--cream);
+            margin-top: 10px;
+        }
+
+        .target-date {
+            font-size: 0.9rem;
+            color: var(--gold-light);
+            margin-top: 15px;
+            font-style: italic;
+        }
+
+        /* Photo Section */
+        .photo-section {
+            margin: 20px 0;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            position: relative;
+            aspect-ratio: 16/10;
+            background: var(--blue-dark);
+        }
+
+        .photo-section img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .photo-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            padding: 30px 15px 10px;
+            font-size: 0.85rem;
+            color: var(--cream);
+            font-style: italic;
+        }
+
+        /* Daily Fact */
+        .fact-section {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid var(--gold);
+        }
+
+        .fact-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            color: var(--gold);
+            font-weight: bold;
+        }
+
+        .fact-header svg {
+            width: 24px;
+            height: 24px;
+            margin-right: 10px;
+        }
+
+        .fact-text {
+            line-height: 1.6;
+            font-size: 1rem;
+        }
+
+        /* Settings Button */
+        .settings-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--gold);
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s, background 0.2s;
+        }
+
+        .settings-btn:hover {
+            transform: scale(1.1);
+            background: var(--gold-light);
+        }
+
+        .settings-btn svg {
+            width: 24px;
+            height: 24px;
+            fill: var(--blue-dark);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--blue-dark);
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 2px solid var(--gold);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .modal-header h2 {
+            color: var(--gold);
+            font-size: 1.5rem;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: var(--cream);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .setting-group {
+            margin-bottom: 25px;
+        }
+
+        .setting-group label {
+            display: block;
+            color: var(--gold-light);
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .setting-group input[type="date"] {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid var(--gold);
+            background: rgba(255,255,255,0.1);
+            color: var(--cream);
+            font-size: 1rem;
+        }
+
+        .setting-group input[type="date"]::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+        }
+
+        /* Photo Upload Area */
+        .upload-area {
+            border: 2px dashed var(--gold);
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .upload-area:hover, .upload-area.dragover {
+            background: rgba(212, 175, 55, 0.1);
+        }
+
+        .upload-area svg {
+            width: 48px;
+            height: 48px;
+            fill: var(--gold);
+            margin-bottom: 10px;
+        }
+
+        .upload-area p {
+            color: var(--gold-light);
+        }
+
+        .upload-area input {
+            display: none;
+        }
+
+        /* User Photos Grid */
+        .user-photos {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .user-photo {
+            aspect-ratio: 1;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .user-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .user-photo .delete-photo {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: rgba(220, 53, 69, 0.9);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            font-size: 14px;
+            line-height: 1;
+        }
+
+        .save-btn {
+            width: 100%;
+            padding: 15px;
+            background: var(--gold);
+            color: var(--blue-dark);
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .save-btn:hover {
+            background: var(--gold-light);
+        }
+
+        /* Buen Camino footer */
+        .footer {
+            text-align: center;
+            margin-top: auto;
+            padding: 20px 0;
+            color: var(--gold);
+            font-style: italic;
+            font-size: 1.2rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.6rem;
+            }
+            .days-number {
+                font-size: 4rem;
+            }
+            .container {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="shell-icon">
+                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="shellGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#F4E4BC"/>
+                            <stop offset="50%" style="stop-color:#D4AF37"/>
+                            <stop offset="100%" style="stop-color:#B8860B"/>
+                        </linearGradient>
+                    </defs>
+                    <!-- Scallop Shell -->
+                    <path d="M50 95 C50 95, 10 60, 10 35 C10 15, 30 5, 50 5 C70 5, 90 15, 90 35 C90 60, 50 95, 50 95 Z"
+                          fill="url(#shellGradient)" stroke="#8B4513" stroke-width="2"/>
+                    <!-- Shell ridges -->
+                    <path d="M50 95 L50 5" stroke="#8B4513" stroke-width="1" opacity="0.5"/>
+                    <path d="M50 95 L25 10" stroke="#8B4513" stroke-width="1" opacity="0.5"/>
+                    <path d="M50 95 L75 10" stroke="#8B4513" stroke-width="1" opacity="0.5"/>
+                    <path d="M50 95 L15 25" stroke="#8B4513" stroke-width="1" opacity="0.5"/>
+                    <path d="M50 95 L85 25" stroke="#8B4513" stroke-width="1" opacity="0.5"/>
+                    <path d="M50 95 L12 45" stroke="#8B4513" stroke-width="1" opacity="0.5"/>
+                    <path d="M50 95 L88 45" stroke="#8B4513" stroke-width="1" opacity="0.5"/>
+                </svg>
+            </div>
+            <h1>CAMINO COUNTDOWN</h1>
+            <p class="subtitle">The Way of Saint James</p>
+        </header>
+
+        <!-- Current Date -->
+        <div class="current-date" id="currentDate"></div>
+
+        <!-- Countdown -->
+        <section class="countdown-section">
+            <div class="days-number" id="daysCount">--</div>
+            <div class="days-label">days until the Camino!</div>
+            <div class="target-date" id="targetDateDisplay"></div>
+        </section>
+
+        <!-- Photo -->
+        <section class="photo-section">
+            <img id="dailyPhoto" src="" alt="Camino de Santiago">
+            <div class="photo-caption" id="photoCaption"></div>
+        </section>
+
+        <!-- Daily Fact -->
+        <section class="fact-section">
+            <div class="fact-header">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+                </svg>
+                <span>Daily Camino Fact</span>
+            </div>
+            <p class="fact-text" id="dailyFact"></p>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Ultreia! Buen Camino!</p>
+        </footer>
+    </div>
+
+    <!-- Settings Button -->
+    <button class="settings-btn" id="settingsBtn" aria-label="Settings">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M19.14 12.94c.04-.31.06-.63.06-.94 0-.31-.02-.63-.06-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.04.31-.06.63-.06.94s.02.63.06.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
+        </svg>
+    </button>
+
+    <!-- Settings Modal -->
+    <div class="modal" id="settingsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Settings</h2>
+                <button class="close-btn" id="closeModal">&times;</button>
+            </div>
+
+            <div class="setting-group">
+                <label for="targetDate">Target Date for Your Camino</label>
+                <input type="date" id="targetDate">
+            </div>
+
+            <div class="setting-group">
+                <label>Your Camino Photos</label>
+                <div class="upload-area" id="uploadArea">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M19 7v2.99s-1.99.01-2 0V7h-3s.01-1.99 0-2h3V2h2v3h3v2h-3zm-3 4V8h-3V5H5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-8h-3zM5 19l3-4 2 3 3-4 4 5H5z"/>
+                    </svg>
+                    <p>Drag & drop photos here<br>or click to browse</p>
+                    <input type="file" id="photoInput" accept="image/*" multiple>
+                </div>
+                <div class="user-photos" id="userPhotos"></div>
+            </div>
+
+            <button class="save-btn" id="saveSettings">Save Settings</button>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // CAMINO FACTS DATABASE
+        // ============================================
+        const caminoFacts = [
+            "The remains of the Apostle St. James were discovered in Galicia around 814 CE, when a hermit named Pelagius saw mysterious lights flickering in the forest.",
+            "King Alfonso II of Asturias became the first recorded pilgrim, traveling from Oviedo to visit St. James's tomb. This route is now called the Camino Primitivo.",
+            "The Camino de Santiago translates to 'The Way of Saint James' - Camino means 'path' and Santiago refers to Saint James.",
+            "There are currently 281 Camino routes listed, spanning over 51,500 miles through 29 different countries worldwide.",
+            "The most popular route, the Camino Francés (French Way), stretches 780 km (500 miles) from Saint-Jean-Pied-de-Port in France to Santiago de Compostela.",
+            "More than 250,000 pilgrims receive a Compostela (official certificate) each year after completing their pilgrimage.",
+            "To receive your Compostela, you must walk at least 100 km or cycle at least 200 km into Santiago de Compostela.",
+            "In 2019, pilgrims from 190 different countries arrived in Santiago, including visitors from Yemen, Bhutan, Tuvalu, and Eswatini.",
+            "The scallop shell is the iconic symbol of the Camino. The lines of the shell represent the many paths pilgrims can take, all converging at one point.",
+            "In 1984, a priest named Elías Valiña personally marked out the entire French Way with yellow arrows that still guide pilgrims today.",
+            "The town of Ayegui has a free wine fountain for pilgrims! It's located at the Irache monastery and continues a medieval monastic tradition.",
+            "July 25th is St. James Day. When this date falls on a Sunday, it's declared a 'Holy Year' (Año Xacobeo), and pilgrims can receive special indulgences.",
+            "The next Holy Year will be 2027. The most recent ones were 2021-2022 (extended due to COVID) and 2010.",
+            "Medieval pilgrims greeted each other with 'Ultreia!' meaning 'Onwards!' This greeting was passed down through the Codex Calixtinus and is still used today.",
+            "The Codex Calixtinus, written in the 12th century by French monk Aymeric Picaud, is considered the world's first travel guide.",
+            "KM 0 of the Camino is actually not in Santiago but at Cape Finisterre (Fisterra), by the Atlantic Ocean, once believed to be the 'end of the world.'",
+            "The longest Camino route is the Antarctic Way (Camino Antártico), beginning at a Spanish research base in Antarctica—8,745 miles from Santiago!",
+            "Sarria, located 111 km from Santiago, is the most popular starting point because it's the minimum distance required for walkers to earn a Compostela.",
+            "Cyclists on the Camino are affectionately called 'Bicigrinos' (a blend of 'bici' for bicycle and 'peregrino' for pilgrim).",
+            "The Camino was declared the first Cultural Route of the Council of Europe in 1987.",
+            "UNESCO designated the Camino routes as a World Heritage Site in 1993, with extensions added in 1998 and 2015.",
+            "The construction of Santiago de Compostela's famous Romanesque cathedral began in 1078, marking a golden age for the pilgrimage.",
+            "In 1558, the Archbishop of Compostela hid St. James's remains to protect them from English pirates. They weren't rediscovered until 1878—over 300 years later!",
+            "South Korean pilgrim numbers increased 450-fold in just 15 years, driven by bestselling books and K-pop celebrity participation.",
+            "The Camino Francés is the most accessible route for wheelchair users, with improved paths and facilities along the way.",
+            "Over 100 'Friends of the Camino' associations across Europe help pilgrims prepare for and complete their journey. The first was founded in Paris in 1950.",
+            "Hospitaleros are volunteers who run pilgrim hostels (albergues), embodying the ancestral tradition of Camino hospitality.",
+            "Many albergues operate on a first-come, first-served basis with no advance bookings, encouraging pilgrims to walk without rigid schedules.",
+            "The Camino Primitivo, the original route walked by King Alfonso II, is taken by less than 5% of modern pilgrims.",
+            "Completing the Camino pilgrimage has traditionally been believed to result in forgiveness of sins and spiritual renewal.",
+            "Spain has 49 official Camino routes covering nearly 10,000 miles, while Portugal has 9 routes spanning over 1,800 miles.",
+            "The French call scallops 'Coquilles Saint-Jacques' (Shells of Saint James), showing how deeply the Camino symbol is embedded in European culture.",
+            "Multiple legends connect St. James to scallop shells, including one about saving a knight whose horse emerged from the sea covered in shells.",
+            "The Camino functions like a river system—smaller routes join together to form larger ones, all flowing toward Santiago de Compostela.",
+            "Since 2013, the Camino has attracted more than 200,000 pilgrims annually, with growth rates exceeding 10% per year.",
+            "In 2019, 350,000 pilgrims arrived in Santiago de Compostela, though about 2.5 million people visit the city each year as tourists.",
+            "The typical pilgrim takes about 5 weeks to complete the full Camino Francés, walking an average of 25 km per day.",
+            "In 2017, more than 50% of pilgrims were aged 30-60, about 35% were under 30, and 12% were over 60.",
+            "The top five countries sending pilgrims are Spain, Italy, Germany, the United States, and Portugal.",
+            "Romania's city of Iași marks the farthest European starting point, located 2,796 miles from Santiago.",
+            "There are 30 recorded maritime Camino routes, allowing pilgrims to begin their journey by sea.",
+            "Modern technology has changed the pilgrim experience—smartphones and WiFi mean travelers now often book ahead and communicate more with home than fellow pilgrims.",
+            "A three-volume study called 'Las Peregrinaciones to Santiago de Compostela' (1948) remains the definitive academic reference on the Camino.",
+            "The yellow arrows marking the Camino were created in the 1980s by priest Elías Valiña and activist Andrés Muñoz when information about the route was scarce.",
+            "Walking the Camino Francés is described as 'not difficult'—most stages are relatively flat on good paths, though preparation is still essential.",
+            "Many pilgrims complete different sections of the Camino across multiple years, eventually piecing together the full route.",
+            "The Way of St. James became one of the three most important Christian pilgrimages in the Middle Ages, alongside Rome and Jerusalem.",
+            "The 10th and 11th centuries saw the Camino become a major pilgrimage route, with thousands traveling from across Europe.",
+            "The pilgrimage declined in the 14th century due to wars, plague, and the Protestant Reformation, but revived in the late 19th century.",
+            "The final quarter of the 20th century saw significant growth in Camino pilgrims, a trend that continues today.",
+            "Santiago de Compostela's Old Town is a UNESCO World Heritage Site, filled with medieval streets and stunning architecture.",
+            "The Roman Walls of Lugo, along the Camino Primitivo, are another UNESCO World Heritage Site—the only Roman walls in the world that remain completely intact.",
+            "The Botafumeiro is a famous giant incense burner in Santiago Cathedral, swung by eight men during special masses and reaching speeds of 68 km/h.",
+            "The Botafumeiro weighs 80 kg and is suspended from the cathedral ceiling by a rope system. It's been used since the 14th century.",
+            "The tradition of the Botafumeiro reportedly began to mask the smell of weary pilgrims arriving at the cathedral after weeks of walking.",
+            "The Pilgrim's Office in Santiago issues approximately 350,000 Compostelas per year, each one personalized with the pilgrim's name in Latin.",
+            "Your Compostela certificate comes with your name written in Latin—a tradition connecting modern pilgrims to their medieval predecessors.",
+            "The credential (pilgrim passport) must be stamped at least twice daily in the final 100 km to prove you walked the required distance.",
+            "Pilgrims can get stamps at churches, albergues, cafes, and even some police stations along the route.",
+            "The Cruz de Ferro (Iron Cross) is one of the Camino's most iconic landmarks. Pilgrims traditionally leave a stone from home at its base.",
+            "The pile of stones at Cruz de Ferro has grown so large over centuries that it now forms a significant mound on the mountain pass.",
+            "O Cebreiro is a mountain village with Celtic roots and round thatched-roof buildings called pallozas, dating back to pre-Roman times.",
+            "The village of O Cebreiro is associated with a famous medieval miracle involving the Eucharist, still commemorated in the local church.",
+            "The Portico de la Gloria (Doorway of Glory) at Santiago Cathedral is a masterpiece of Romanesque sculpture, completed in 1188 by Master Mateo.",
+            "Pilgrims traditionally place their hand in a worn handprint on the Tree of Jesse column in the Portico de la Gloria.",
+            "Another tradition involves pilgrims bumping heads with the statue of Master Mateo inside the cathedral, hoping to receive some of his genius.",
+            "The Cathedral of Santiago de Compostela took over 200 years to complete, with construction spanning from 1078 to the 13th century.",
+            "The cathedral has been extensively renovated, with its Baroque facade added in the 18th century to protect the original Romanesque entrance.",
+            "Pilgrims often arrive in time for the noon Pilgrim's Mass, where their countries of origin are announced by a priest.",
+            "Many pilgrims continue 88 km beyond Santiago to Finisterre, following an ancient tradition of walking to the 'end of the earth.'",
+            "At Finisterre, pilgrims traditionally burn an item of clothing or their walking boots to symbolize the end of their journey.",
+            "The lighthouse at Cape Finisterre marks the symbolic end of the Camino, where pilgrims watch the sun set over the Atlantic.",
+            "The name Finisterre comes from the Latin 'Finis Terrae,' meaning 'end of the earth'—Romans believed this was the westernmost point of the known world.",
+            "Some pilgrims collect a scallop shell from the beaches near Finisterre to bring home as a memento of their journey.",
+            "The Camino passes through the famous Rioja wine region, where pilgrims can sample some of Spain's finest wines.",
+            "Pamplona, famous for its running of the bulls during San Fermín festival, is an early stop on the Camino Francés.",
+            "The Camino crosses the Pyrenees mountains in its first stage, offering challenging but spectacular hiking from France into Spain.",
+            "The route through the Pyrenees follows the same path used by Napoleon's armies and medieval traders for centuries.",
+            "Burgos Cathedral, a UNESCO World Heritage Site along the Camino, contains the tomb of El Cid, Spain's legendary medieval warrior.",
+            "León Cathedral is known as the 'House of Light' due to its stunning 1,800 square meters of stained glass windows.",
+            "The Camino passes through the Meseta, a vast, flat plateau in central Spain that many pilgrims find mentally challenging but spiritually transformative.",
+            "The Meseta stretches for about 200 km and offers endless horizons, extreme temperatures, and a meditative walking experience.",
+            "Astorga is famous for its Gaudí-designed Episcopal Palace, a fairy-tale building that now houses the Museum of the Caminos.",
+            "The Camino del Norte follows Spain's northern coast and is known for its rugged beauty and challenging terrain.",
+            "The Via de la Plata is an ancient Roman road running from Seville to Santiago, covering nearly 1,000 km through western Spain.",
+            "The Camino Portugués runs from Lisbon or Porto and is the second most popular route after the Camino Francés.",
+            "The Camino Inglés starts from the port cities of A Coruña or Ferrol, traditionally used by British and Northern European pilgrims arriving by sea.",
+            "Saint-Jean-Pied-de-Port, the traditional starting point of the Camino Francés, is a beautiful medieval town in the French Pyrenees.",
+            "The first stage from Saint-Jean-Pied-de-Port crosses the Pyrenees and is considered one of the most challenging but rewarding days of the entire Camino.",
+            "Roncesvalles, just over the Pyrenees in Spain, has welcomed pilgrims since the 12th century and still offers blessing services.",
+            "The Camino inspired the 2010 film 'The Way' starring Martin Sheen, which significantly increased American interest in the pilgrimage.",
+            "Paulo Coelho's 1987 novel 'The Pilgrimage' is based on his own Camino experience and helped spark renewed worldwide interest in the route.",
+            "Shirley MacLaine wrote about her Camino experience in 'The Camino: A Journey of the Spirit,' contributing to its popularity in the 1990s.",
+            "Many pilgrims report that the Camino changed their lives, providing clarity, healing, and a new perspective on what matters most.",
+            "The phrase 'Buen Camino' (Good Way/Good Journey) is how pilgrims greet each other, wishing fellow travelers well on their path.",
+            "The Camino community creates strong bonds—pilgrims often reunite with people they met on the trail years later.",
+            "Many pilgrims walk the Camino during major life transitions: retirement, divorce, career changes, or after losing a loved one.",
+            "The average cost of walking the Camino Francés is €30-50 per day, including accommodation in albergues and simple meals.",
+            "Spring (April-May) and fall (September-October) are considered the best times to walk, avoiding summer heat and winter cold."
+        ];
+
+        // ============================================
+        // CURATED CAMINO PHOTOS
+        // ============================================
+        const defaultPhotos = [
+            { url: "https://images.unsplash.com/photo-1539635278303-d4002c07eae3?w=800", caption: "The path through the Spanish countryside" },
+            { url: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800", caption: "Santiago de Compostela Cathedral" },
+            { url: "https://images.unsplash.com/photo-1543783207-ec64e4d95325?w=800", caption: "Walking through the golden Meseta" },
+            { url: "https://images.unsplash.com/photo-1509023464722-18d996393ca8?w=800", caption: "Misty morning on the Camino" },
+            { url: "https://images.unsplash.com/photo-1559827291-72ee739d0d9a?w=800", caption: "Ancient stone pathway in Galicia" },
+            { url: "https://images.unsplash.com/photo-1570698473651-b2de99bae12f?w=800", caption: "Sunset over the Spanish plains" },
+            { url: "https://images.unsplash.com/photo-1552832230-c0197dd311b5?w=800", caption: "Historic village along the Way" },
+            { url: "https://images.unsplash.com/photo-1555881400-74d7acaacd8b?w=800", caption: "The rolling hills of northern Spain" },
+            { url: "https://images.unsplash.com/photo-1551918120-9739cb430c6d?w=800", caption: "Vineyards in the Rioja region" },
+            { url: "https://images.unsplash.com/photo-1504019347908-b45f9b0b8dd5?w=800", caption: "Crossing the Pyrenees" }
+        ];
+
+        // ============================================
+        // APP STATE & FUNCTIONS
+        // ============================================
+        let targetDate = localStorage.getItem('caminoTargetDate') || '2026-05-22';
+        let userPhotos = JSON.parse(localStorage.getItem('caminoUserPhotos') || '[]');
+
+        function formatDate(date) {
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            return date.toLocaleDateString('en-US', options);
+        }
+
+        function getDaysUntil(targetDateStr) {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const target = new Date(targetDateStr);
+            target.setHours(0, 0, 0, 0);
+            const diffTime = target - today;
+            return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        }
+
+        function getDayOfYear() {
+            const now = new Date();
+            const start = new Date(now.getFullYear(), 0, 0);
+            const diff = now - start;
+            return Math.floor(diff / (1000 * 60 * 60 * 24));
+        }
+
+        function updateDisplay() {
+            // Current date
+            document.getElementById('currentDate').textContent = formatDate(new Date());
+
+            // Days countdown
+            const days = getDaysUntil(targetDate);
+            document.getElementById('daysCount').textContent = days;
+            document.getElementById('targetDateDisplay').textContent =
+                `Starting: ${formatDate(new Date(targetDate))}`;
+
+            // Daily fact (based on day of year for consistency)
+            const factIndex = getDayOfYear() % caminoFacts.length;
+            document.getElementById('dailyFact').textContent = caminoFacts[factIndex];
+
+            // Daily photo
+            const photoIndex = getDayOfYear() % (userPhotos.length > 0 ? userPhotos.length : defaultPhotos.length);
+            const photo = userPhotos.length > 0 ? userPhotos[photoIndex] : defaultPhotos[photoIndex];
+
+            document.getElementById('dailyPhoto').src = photo.url || photo;
+            document.getElementById('photoCaption').textContent = photo.caption || 'The Camino de Santiago';
+        }
+
+        // ============================================
+        // SETTINGS MODAL
+        // ============================================
+        const modal = document.getElementById('settingsModal');
+        const settingsBtn = document.getElementById('settingsBtn');
+        const closeBtn = document.getElementById('closeModal');
+        const saveBtn = document.getElementById('saveSettings');
+        const dateInput = document.getElementById('targetDate');
+        const uploadArea = document.getElementById('uploadArea');
+        const photoInput = document.getElementById('photoInput');
+        const userPhotosGrid = document.getElementById('userPhotos');
+
+        settingsBtn.addEventListener('click', () => {
+            dateInput.value = targetDate;
+            renderUserPhotos();
+            modal.classList.add('active');
+        });
+
+        closeBtn.addEventListener('click', () => modal.classList.remove('active'));
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) modal.classList.remove('active');
+        });
+
+        saveBtn.addEventListener('click', () => {
+            targetDate = dateInput.value;
+            localStorage.setItem('caminoTargetDate', targetDate);
+            localStorage.setItem('caminoUserPhotos', JSON.stringify(userPhotos));
+            updateDisplay();
+            modal.classList.remove('active');
+        });
+
+        // ============================================
+        // PHOTO UPLOAD
+        // ============================================
+        uploadArea.addEventListener('click', () => photoInput.click());
+
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            handleFiles(e.dataTransfer.files);
+        });
+
+        photoInput.addEventListener('change', () => {
+            handleFiles(photoInput.files);
+        });
+
+        function handleFiles(files) {
+            Array.from(files).forEach(file => {
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        userPhotos.push({
+                            url: e.target.result,
+                            caption: file.name.replace(/\.[^/.]+$/, "").replace(/[-_]/g, " ")
+                        });
+                        renderUserPhotos();
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+
+        function renderUserPhotos() {
+            userPhotosGrid.innerHTML = userPhotos.map((photo, index) => `
+                <div class="user-photo">
+                    <img src="${photo.url || photo}" alt="User photo">
+                    <button class="delete-photo" onclick="deletePhoto(${index})">&times;</button>
+                </div>
+            `).join('');
+        }
+
+        window.deletePhoto = function(index) {
+            userPhotos.splice(index, 1);
+            renderUserPhotos();
+        };
+
+        // ============================================
+        // INITIALIZE
+        // ============================================
+        updateDisplay();
+
+        // Update at midnight
+        setInterval(() => {
+            const now = new Date();
+            if (now.getHours() === 0 && now.getMinutes() === 0) {
+                updateDisplay();
+            }
+        }, 60000);
+
+        // ============================================
+        // SERVICE WORKER REGISTRATION (PWA)
+        // ============================================
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('service-worker.js')
+                    .then(registration => {
+                        console.log('ServiceWorker registered:', registration.scope);
+                    })
+                    .catch(error => {
+                        console.log('ServiceWorker registration failed:', error);
+                    });
+            });
+        }
+    </script>
+</body>
+</html>
