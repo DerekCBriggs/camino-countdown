@@ -14,7 +14,7 @@ A Progressive Web App (PWA) that counts down the days until your Camino de Santi
 ## How to Use
 
 ### On the Web
-Visit: [Your GitHub Pages URL will go here]
+Visit: **https://derekcbriggs.github.io/camino-countdown/**
 
 ### Install on iPhone
 1. Open the website in Safari
