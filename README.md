@@ -5,8 +5,9 @@ A Progressive Web App (PWA) that counts down the days until your Camino de Santi
 ## Features
 
 - **Countdown Timer**: Shows days remaining until your Camino start date
-- **Daily Facts**: 100+ rotating facts about the Camino's history, traditions, and landmarks
-- **Photo Gallery**: View curated Camino photos or upload your own
+- **Daily Facts**: 100+ rotating facts about the Camino's history, traditions, and landmarks — tap for more!
+- **Daily Photos**: Curated Camino photos that rotate each day
+- **French Way Stages**: Browse all 33 stages of the Camino Frances from Saint Jean de Pied de Port to Santiago de Compostela, with distances
 - **Installable**: Add to your phone's home screen for app-like experience
 - **Works Offline**: Core functionality available without internet
 - **Responsive Design**: Beautiful pilgrimage-themed UI on any device
@@ -27,11 +28,11 @@ Visit: **https://derekcbriggs.github.io/camino-countdown/**
 2. Tap the menu (three dots)
 3. Select "Add to Home Screen" or "Install App"
 
-## Customization
+## How It Works
 
-Click the gear icon (⚙️) to:
-- Set your Camino start date
-- Upload your own photos
+- **Set your date**: Tap the gear icon to set your Camino start date
+- **Explore stages**: Tap "Explore the French Way Stages" to browse all 33 stages with distances
+- **Discover facts**: Tap the daily fact to get a new random fact about the Camino
 
 ## About the Camino de Santiago
 

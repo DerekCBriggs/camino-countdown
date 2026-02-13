@@ -46,8 +46,9 @@ Once installed:
 
 - **Open the app** by tapping its icon on your home screen
 - **Set your start date** by tapping the gear icon (settings) and entering when your Camino begins
-- **View daily facts** about the Camino de Santiago
-- **Browse photos** or upload your own Camino memories
+- **View daily facts** about the Camino de Santiago — tap the fact to get a new random one!
+- **Explore stages** by tapping "Explore the French Way Stages" to see all 33 stages from Saint Jean to Santiago with distances
+- **Enjoy daily photos** — a curated Camino photo rotates each day
 - **Works offline** - the countdown and facts work without internet
 
 ---
