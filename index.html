@@ -162,6 +162,12 @@
             padding: 20px;
             margin: 20px 0;
             border-left: 4px solid var(--gold);
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .fact-section:hover {
+            background: rgba(255, 255, 255, 0.15);
         }
 
         .fact-header {
@@ -181,6 +187,14 @@
         .fact-text {
             line-height: 1.6;
             font-size: 1rem;
+        }
+
+        .fact-hint {
+            color: var(--gold-light);
+            font-size: 0.75rem;
+            margin-top: 10px;
+            opacity: 0.7;
+            font-style: italic;
         }
 
         /* Settings Button */
@@ -288,71 +302,6 @@
             filter: invert(1);
         }
 
-        /* Photo Upload Area */
-        .upload-area {
-            border: 2px dashed var(--gold);
-            border-radius: 10px;
-            padding: 30px;
-            text-align: center;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .upload-area:hover, .upload-area.dragover {
-            background: rgba(212, 175, 55, 0.1);
-        }
-
-        .upload-area svg {
-            width: 48px;
-            height: 48px;
-            fill: var(--gold);
-            margin-bottom: 10px;
-        }
-
-        .upload-area p {
-            color: var(--gold-light);
-        }
-
-        .upload-area input {
-            display: none;
-        }
-
-        /* User Photos Grid */
-        .user-photos {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-top: 15px;
-        }
-
-        .user-photo {
-            aspect-ratio: 1;
-            border-radius: 8px;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .user-photo img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .user-photo .delete-photo {
-            position: absolute;
-            top: 5px;
-            right: 5px;
-            background: rgba(220, 53, 69, 0.9);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 24px;
-            height: 24px;
-            cursor: pointer;
-            font-size: 14px;
-            line-height: 1;
-        }
-
         .save-btn {
             width: 100%;
             padding: 15px;
@@ -368,6 +317,146 @@
 
         .save-btn:hover {
             background: var(--gold-light);
+        }
+
+        /* Stages Link Button */
+        .stages-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--gold);
+            border-radius: 10px;
+            padding: 15px 20px;
+            margin: 20px 0;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.2s;
+            text-decoration: none;
+            color: var(--gold);
+            font-family: inherit;
+            font-size: 1.05rem;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
+
+        .stages-link:hover {
+            background: rgba(212, 175, 55, 0.15);
+            transform: scale(1.02);
+        }
+
+        .stages-link svg {
+            width: 22px;
+            height: 22px;
+            fill: var(--gold);
+            flex-shrink: 0;
+        }
+
+        .stages-link .arrow {
+            margin-left: auto;
+            opacity: 0.6;
+        }
+
+        /* Stages Page */
+        .stages-header-bar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .stages-header-bar .back-btn {
+            background: none;
+            border: none;
+            color: var(--gold);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 5px 10px;
+            line-height: 1;
+        }
+
+        .stages-header-bar h2 {
+            color: var(--gold);
+            font-size: 1.3rem;
+            flex: 1;
+        }
+
+        .stages-summary {
+            text-align: center;
+            padding: 12px;
+            margin-bottom: 20px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .stages-summary .total-distance {
+            color: var(--gold);
+            font-size: 1.4rem;
+            font-weight: bold;
+        }
+
+        .stages-summary .total-label {
+            color: var(--gold-light);
+            font-size: 0.85rem;
+            margin-top: 2px;
+        }
+
+        .stage-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .stage-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 12px;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+            transition: background 0.2s;
+        }
+
+        .stage-item:last-child {
+            border-bottom: none;
+        }
+
+        .stage-number {
+            background: var(--gold);
+            color: var(--blue-dark);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+
+        .stage-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .stage-route {
+            color: var(--cream);
+            font-size: 0.95rem;
+            line-height: 1.3;
+        }
+
+        .stage-distance {
+            color: var(--gold-light);
+            font-size: 0.8rem;
+            margin-top: 2px;
+        }
+
+        .stage-km {
+            color: var(--gold);
+            font-weight: bold;
+            font-size: 0.95rem;
+            white-space: nowrap;
         }
 
         /* Buen Camino footer */
@@ -390,6 +479,9 @@
             }
             .container {
                 padding: 15px;
+            }
+            .stage-route {
+                font-size: 0.88rem;
             }
         }
     </style>
@@ -440,6 +532,17 @@
             <div class="photo-caption" id="photoCaption"></div>
         </section>
 
+        <!-- Stages Link -->
+        <a class="stages-link" id="stagesLink">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+            </svg>
+            <span>Explore the French Way Stages</span>
+            <svg class="arrow" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="18" height="18">
+                <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/>
+            </svg>
+        </a>
+
         <!-- Daily Fact -->
         <section class="fact-section">
             <div class="fact-header">
@@ -449,6 +552,7 @@
                 <span>Daily Camino Fact</span>
             </div>
             <p class="fact-text" id="dailyFact"></p>
+            <p class="fact-hint">Tap for another fact</p>
         </section>
 
         <!-- Footer -->
@@ -477,19 +581,24 @@
                 <input type="date" id="targetDate">
             </div>
 
-            <div class="setting-group">
-                <label>Your Camino Photos</label>
-                <div class="upload-area" id="uploadArea">
-                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M19 7v2.99s-1.99.01-2 0V7h-3s.01-1.99 0-2h3V2h2v3h3v2h-3zm-3 4V8h-3V5H5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-8h-3zM5 19l3-4 2 3 3-4 4 5H5z"/>
-                    </svg>
-                    <p>Drag & drop photos here<br>or click to browse</p>
-                    <input type="file" id="photoInput" accept="image/*" multiple>
-                </div>
-                <div class="user-photos" id="userPhotos"></div>
+            <button class="save-btn" id="saveSettings">Save Settings</button>
+        </div>
+    </div>
+
+    <!-- Stages Modal -->
+    <div class="modal" id="stagesModal">
+        <div class="modal-content" style="max-width: 550px;">
+            <div class="stages-header-bar">
+                <button class="back-btn" id="closeStages">&larr;</button>
+                <h2>The French Way Stages</h2>
             </div>
 
-            <button class="save-btn" id="saveSettings">Save Settings</button>
+            <div class="stages-summary">
+                <div class="total-distance">790 km</div>
+                <div class="total-label">33 stages from Saint Jean to Santiago</div>
+            </div>
+
+            <ul class="stage-list" id="stageList"></ul>
         </div>
     </div>
 
@@ -619,18 +728,21 @@
         // APP STATE & FUNCTIONS
         // ============================================
         let targetDate = localStorage.getItem('caminoTargetDate') || '2026-05-22';
-        let userPhotos = JSON.parse(localStorage.getItem('caminoUserPhotos') || '[]');
 
         function formatDate(date) {
             const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
             return date.toLocaleDateString('en-US', options);
         }
 
+        function parseLocalDate(dateStr) {
+            const [year, month, day] = dateStr.split('-').map(Number);
+            return new Date(year, month - 1, day);
+        }
+
         function getDaysUntil(targetDateStr) {
             const today = new Date();
             today.setHours(0, 0, 0, 0);
-            const target = new Date(targetDateStr);
-            target.setHours(0, 0, 0, 0);
+            const target = parseLocalDate(targetDateStr);
             const diffTime = target - today;
             return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
         }
@@ -650,18 +762,18 @@
             const days = getDaysUntil(targetDate);
             document.getElementById('daysCount').textContent = days;
             document.getElementById('targetDateDisplay').textContent =
-                `Starting: ${formatDate(new Date(targetDate))}`;
+                `Starting: ${formatDate(parseLocalDate(targetDate))}`;
 
             // Daily fact (based on day of year for consistency)
             const factIndex = getDayOfYear() % caminoFacts.length;
             document.getElementById('dailyFact').textContent = caminoFacts[factIndex];
 
             // Daily photo
-            const photoIndex = getDayOfYear() % (userPhotos.length > 0 ? userPhotos.length : defaultPhotos.length);
-            const photo = userPhotos.length > 0 ? userPhotos[photoIndex] : defaultPhotos[photoIndex];
+            const photoIndex = getDayOfYear() % defaultPhotos.length;
+            const photo = defaultPhotos[photoIndex];
 
-            document.getElementById('dailyPhoto').src = photo.url || photo;
-            document.getElementById('photoCaption').textContent = photo.caption || 'The Camino de Santiago';
+            document.getElementById('dailyPhoto').src = photo.url;
+            document.getElementById('photoCaption').textContent = photo.caption;
         }
 
         // ============================================
@@ -672,13 +784,9 @@
         const closeBtn = document.getElementById('closeModal');
         const saveBtn = document.getElementById('saveSettings');
         const dateInput = document.getElementById('targetDate');
-        const uploadArea = document.getElementById('uploadArea');
-        const photoInput = document.getElementById('photoInput');
-        const userPhotosGrid = document.getElementById('userPhotos');
 
         settingsBtn.addEventListener('click', () => {
             dateInput.value = targetDate;
-            renderUserPhotos();
             modal.classList.add('active');
         });
 
@@ -690,64 +798,87 @@
         saveBtn.addEventListener('click', () => {
             targetDate = dateInput.value;
             localStorage.setItem('caminoTargetDate', targetDate);
-            localStorage.setItem('caminoUserPhotos', JSON.stringify(userPhotos));
             updateDisplay();
             modal.classList.remove('active');
         });
 
         // ============================================
-        // PHOTO UPLOAD
+        // STAGES PAGE
         // ============================================
-        uploadArea.addEventListener('click', () => photoInput.click());
+        const caminoStages = [
+            { from: "Saint Jean de Pied de Port", to: "Roncesvalles", km: 25.7 },
+            { from: "Roncesvalles", to: "Zubiri", km: 22.4 },
+            { from: "Zubiri", to: "Pamplona", km: 20.4 },
+            { from: "Pamplona", to: "Puente la Reina", km: 23.9 },
+            { from: "Puente la Reina", to: "Estella", km: 21.6 },
+            { from: "Estella", to: "Los Arcos", km: 21.3 },
+            { from: "Los Arcos", to: "Logrono", km: 27.6 },
+            { from: "Logrono", to: "Najera", km: 29.0 },
+            { from: "Najera", to: "Santo Domingo", km: 20.7 },
+            { from: "Santo Domingo", to: "Belorado", km: 22.0 },
+            { from: "Belorado", to: "San Juan de Ortega", km: 23.9 },
+            { from: "San Juan de Ortega", to: "Burgos", km: 25.8 },
+            { from: "Burgos", to: "Hornillos", km: 21.0 },
+            { from: "Hornillos", to: "Castrojeriz", km: 20.0 },
+            { from: "Castrojeriz", to: "Fromista", km: 24.7 },
+            { from: "Fromista", to: "Carrion de los Condes", km: 18.8 },
+            { from: "Carrion de los Condes", to: "Sahagun", km: 37.6 },
+            { from: "Sahagun", to: "El Burgo Ranero", km: 17.0 },
+            { from: "El Burgo Ranero", to: "Mansilla", km: 18.0 },
+            { from: "Mansilla", to: "Leon", km: 17.0 },
+            { from: "Leon", to: "Villadangos", km: 20.4 },
+            { from: "Villadangos", to: "Astorga", km: 27.9 },
+            { from: "Astorga", to: "Rabanal del Camino", km: 20.2 },
+            { from: "Rabanal del Camino", to: "Molinaseca", km: 24.7 },
+            { from: "Molinaseca", to: "Villafranca del Bierzo", km: 31.9 },
+            { from: "Villafranca del Bierzo", to: "O Cebreiro", km: 27.8 },
+            { from: "O Cebreiro", to: "Triacastela", km: 20.8 },
+            { from: "Triacastela", to: "Sarria", km: 25.0 },
+            { from: "Sarria", to: "Portomarin", km: 22.0 },
+            { from: "Portomarin", to: "Palas de Rei", km: 25.0 },
+            { from: "Palas de Rei", to: "Arzua", km: 30.0 },
+            { from: "Arzua", to: "O Pedrouzo", km: 20.0 },
+            { from: "O Pedrouzo", to: "Santiago de Compostela", km: 20.0 }
+        ];
 
-        uploadArea.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            uploadArea.classList.add('dragover');
-        });
+        const stagesModal = document.getElementById('stagesModal');
+        const stagesLink = document.getElementById('stagesLink');
+        const closeStagesBtn = document.getElementById('closeStages');
+        const stageList = document.getElementById('stageList');
 
-        uploadArea.addEventListener('dragleave', () => {
-            uploadArea.classList.remove('dragover');
-        });
-
-        uploadArea.addEventListener('drop', (e) => {
-            e.preventDefault();
-            uploadArea.classList.remove('dragover');
-            handleFiles(e.dataTransfer.files);
-        });
-
-        photoInput.addEventListener('change', () => {
-            handleFiles(photoInput.files);
-        });
-
-        function handleFiles(files) {
-            Array.from(files).forEach(file => {
-                if (file.type.startsWith('image/')) {
-                    const reader = new FileReader();
-                    reader.onload = (e) => {
-                        userPhotos.push({
-                            url: e.target.result,
-                            caption: file.name.replace(/\.[^/.]+$/, "").replace(/[-_]/g, " ")
-                        });
-                        renderUserPhotos();
-                    };
-                    reader.readAsDataURL(file);
-                }
-            });
-        }
-
-        function renderUserPhotos() {
-            userPhotosGrid.innerHTML = userPhotos.map((photo, index) => `
-                <div class="user-photo">
-                    <img src="${photo.url || photo}" alt="User photo">
-                    <button class="delete-photo" onclick="deletePhoto(${index})">&times;</button>
-                </div>
+        function renderStages() {
+            stageList.innerHTML = caminoStages.map((stage, i) => `
+                <li class="stage-item">
+                    <div class="stage-number">${i + 1}</div>
+                    <div class="stage-info">
+                        <div class="stage-route">${stage.from} &rarr; ${stage.to}</div>
+                    </div>
+                    <div class="stage-km">${stage.km} km</div>
+                </li>
             `).join('');
         }
 
-        window.deletePhoto = function(index) {
-            userPhotos.splice(index, 1);
-            renderUserPhotos();
-        };
+        stagesLink.addEventListener('click', () => {
+            renderStages();
+            stagesModal.classList.add('active');
+        });
+
+        closeStagesBtn.addEventListener('click', () => stagesModal.classList.remove('active'));
+        stagesModal.addEventListener('click', (e) => {
+            if (e.target === stagesModal) stagesModal.classList.remove('active');
+        });
+
+        // ============================================
+        // RANDOM FACT ON TAP
+        // ============================================
+        document.querySelector('.fact-section').addEventListener('click', () => {
+            const currentFact = document.getElementById('dailyFact').textContent;
+            let randomIndex;
+            do {
+                randomIndex = Math.floor(Math.random() * caminoFacts.length);
+            } while (caminoFacts[randomIndex] === currentFact);
+            document.getElementById('dailyFact').textContent = caminoFacts[randomIndex];
+        });
 
         // ============================================
         // INITIALIZE
