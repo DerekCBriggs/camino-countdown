@@ -1,4 +1,4 @@
-const CACHE_NAME = 'camino-countdown-v2';
+const CACHE_NAME = 'camino-countdown-v3';
 const urlsToCache = [
   './',
   './index.html',

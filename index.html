@@ -459,6 +459,84 @@
             white-space: nowrap;
         }
 
+        .stage-item {
+            cursor: pointer;
+        }
+
+        .stage-item:hover {
+            background: rgba(212, 175, 55, 0.1);
+        }
+
+        .stage-item:active {
+            background: rgba(212, 175, 55, 0.2);
+        }
+
+        .stage-chevron {
+            color: var(--gold);
+            opacity: 0.4;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        /* Stage Detail View */
+        .stage-detail-route {
+            text-align: center;
+            color: var(--cream);
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        .stage-detail-distance {
+            text-align: center;
+            color: var(--gold);
+            font-size: 1rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .stage-detail-section {
+            margin-bottom: 20px;
+        }
+
+        .stage-detail-section h3 {
+            color: var(--gold-light);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .stage-detail-img {
+            width: 100%;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .interactive-map-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            padding: 14px 20px;
+            background: var(--gold);
+            color: var(--blue-dark);
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            font-family: inherit;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 10px;
+        }
+
+        .interactive-map-btn:hover {
+            background: var(--gold-light);
+        }
+
         /* Buen Camino footer */
         .footer {
             text-align: center;
@@ -588,17 +666,44 @@
     <!-- Stages Modal -->
     <div class="modal" id="stagesModal">
         <div class="modal-content" style="max-width: 550px;">
-            <div class="stages-header-bar">
-                <button class="back-btn" id="closeStages">&larr;</button>
-                <h2>The French Way Stages</h2>
+
+            <!-- View A: Stage List -->
+            <div id="stagesListView">
+                <div class="stages-header-bar">
+                    <button class="back-btn" id="closeStages">&larr;</button>
+                    <h2>The French Way Stages</h2>
+                </div>
+                <div class="stages-summary">
+                    <div class="total-distance">790 km</div>
+                    <div class="total-label">33 stages from Saint Jean to Santiago</div>
+                </div>
+                <ul class="stage-list" id="stageList"></ul>
             </div>
 
-            <div class="stages-summary">
-                <div class="total-distance">790 km</div>
-                <div class="total-label">33 stages from Saint Jean to Santiago</div>
+            <!-- View B: Stage Detail -->
+            <div id="stageDetailView" style="display: none;">
+                <div class="stages-header-bar">
+                    <button class="back-btn" id="backToStages">&larr;</button>
+                    <h2 id="stageDetailTitle"></h2>
+                </div>
+                <div class="stage-detail-route" id="stageDetailRoute"></div>
+                <div class="stage-detail-distance" id="stageDetailDistance"></div>
+                <div class="stage-detail-section">
+                    <h3>Route Map</h3>
+                    <img id="stageMapImg" class="stage-detail-img" src="" alt="Stage route map">
+                </div>
+                <div class="stage-detail-section">
+                    <h3>Elevation Profile</h3>
+                    <img id="stageElevationImg" class="stage-detail-img" src="" alt="Stage elevation profile">
+                </div>
+                <a id="stageInteractiveMapLink" class="interactive-map-btn" href="" target="_blank" rel="noopener noreferrer">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                        <path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z"/>
+                    </svg>
+                    View Interactive Map
+                </a>
             </div>
 
-            <ul class="stage-list" id="stageList"></ul>
         </div>
     </div>
 
@@ -806,39 +911,39 @@
         // STAGES PAGE
         // ============================================
         const caminoStages = [
-            { from: "Saint Jean de Pied de Port", to: "Roncesvalles", km: 25.7 },
-            { from: "Roncesvalles", to: "Zubiri", km: 22.4 },
-            { from: "Zubiri", to: "Pamplona", km: 20.4 },
-            { from: "Pamplona", to: "Puente la Reina", km: 23.9 },
-            { from: "Puente la Reina", to: "Estella", km: 21.6 },
-            { from: "Estella", to: "Los Arcos", km: 21.3 },
-            { from: "Los Arcos", to: "Logrono", km: 27.6 },
-            { from: "Logrono", to: "Najera", km: 29.0 },
-            { from: "Najera", to: "Santo Domingo", km: 20.7 },
-            { from: "Santo Domingo", to: "Belorado", km: 22.0 },
-            { from: "Belorado", to: "San Juan de Ortega", km: 23.9 },
-            { from: "San Juan de Ortega", to: "Burgos", km: 25.8 },
-            { from: "Burgos", to: "Hornillos", km: 21.0 },
-            { from: "Hornillos", to: "Castrojeriz", km: 20.0 },
-            { from: "Castrojeriz", to: "Fromista", km: 24.7 },
-            { from: "Fromista", to: "Carrion de los Condes", km: 18.8 },
-            { from: "Carrion de los Condes", to: "Sahagun", km: 37.6 },
-            { from: "Sahagun", to: "El Burgo Ranero", km: 17.0 },
-            { from: "El Burgo Ranero", to: "Mansilla", km: 18.0 },
-            { from: "Mansilla", to: "Leon", km: 17.0 },
-            { from: "Leon", to: "Villadangos", km: 20.4 },
-            { from: "Villadangos", to: "Astorga", km: 27.9 },
-            { from: "Astorga", to: "Rabanal del Camino", km: 20.2 },
-            { from: "Rabanal del Camino", to: "Molinaseca", km: 24.7 },
-            { from: "Molinaseca", to: "Villafranca del Bierzo", km: 31.9 },
-            { from: "Villafranca del Bierzo", to: "O Cebreiro", km: 27.8 },
-            { from: "O Cebreiro", to: "Triacastela", km: 20.8 },
-            { from: "Triacastela", to: "Sarria", km: 25.0 },
-            { from: "Sarria", to: "Portomarin", km: 22.0 },
-            { from: "Portomarin", to: "Palas de Rei", km: 25.0 },
-            { from: "Palas de Rei", to: "Arzua", km: 30.0 },
-            { from: "Arzua", to: "O Pedrouzo", km: 20.0 },
-            { from: "O Pedrouzo", to: "Santiago de Compostela", km: 20.0 }
+            { from: "Saint Jean de Pied de Port", to: "Roncesvalles", km: 25.7, fromCoords: "43.1631,-1.2358", toCoords: "43.0093,-1.3197" },
+            { from: "Roncesvalles", to: "Zubiri", km: 22.4, fromCoords: "43.0093,-1.3197", toCoords: "42.9295,-1.5047" },
+            { from: "Zubiri", to: "Pamplona", km: 20.4, fromCoords: "42.9295,-1.5047", toCoords: "42.8125,-1.6458" },
+            { from: "Pamplona", to: "Puente la Reina", km: 23.9, fromCoords: "42.8125,-1.6458", toCoords: "42.6724,-1.8113" },
+            { from: "Puente la Reina", to: "Estella", km: 21.6, fromCoords: "42.6724,-1.8113", toCoords: "42.6712,-2.0322" },
+            { from: "Estella", to: "Los Arcos", km: 21.3, fromCoords: "42.6712,-2.0322", toCoords: "42.5688,-2.1928" },
+            { from: "Los Arcos", to: "Logrono", km: 27.6, fromCoords: "42.5688,-2.1928", toCoords: "42.4627,-2.4449" },
+            { from: "Logrono", to: "Najera", km: 29.0, fromCoords: "42.4627,-2.4449", toCoords: "42.4167,-2.7333" },
+            { from: "Najera", to: "Santo Domingo", km: 20.7, fromCoords: "42.4167,-2.7333", toCoords: "42.4390,-2.9518" },
+            { from: "Santo Domingo", to: "Belorado", km: 22.0, fromCoords: "42.4390,-2.9518", toCoords: "42.4203,-3.1902" },
+            { from: "Belorado", to: "San Juan de Ortega", km: 23.9, fromCoords: "42.4203,-3.1902", toCoords: "42.3741,-3.4359" },
+            { from: "San Juan de Ortega", to: "Burgos", km: 25.8, fromCoords: "42.3741,-3.4359", toCoords: "42.3440,-3.6969" },
+            { from: "Burgos", to: "Hornillos", km: 21.0, fromCoords: "42.3440,-3.6969", toCoords: "42.3382,-3.9253" },
+            { from: "Hornillos", to: "Castrojeriz", km: 20.0, fromCoords: "42.3382,-3.9253", toCoords: "42.2893,-4.1386" },
+            { from: "Castrojeriz", to: "Fromista", km: 24.7, fromCoords: "42.2893,-4.1386", toCoords: "42.2667,-4.4053" },
+            { from: "Fromista", to: "Carrion de los Condes", km: 18.8, fromCoords: "42.2667,-4.4053", toCoords: "42.3372,-4.6027" },
+            { from: "Carrion de los Condes", to: "Sahagun", km: 37.6, fromCoords: "42.3372,-4.6027", toCoords: "42.3714,-5.0293" },
+            { from: "Sahagun", to: "El Burgo Ranero", km: 17.0, fromCoords: "42.3714,-5.0293", toCoords: "42.4158,-5.2173" },
+            { from: "El Burgo Ranero", to: "Mansilla", km: 18.0, fromCoords: "42.4158,-5.2173", toCoords: "42.5007,-5.4163" },
+            { from: "Mansilla", to: "Leon", km: 17.0, fromCoords: "42.5007,-5.4163", toCoords: "42.5987,-5.5671" },
+            { from: "Leon", to: "Villadangos", km: 20.4, fromCoords: "42.5987,-5.5671", toCoords: "42.5194,-5.7658" },
+            { from: "Villadangos", to: "Astorga", km: 27.9, fromCoords: "42.5194,-5.7658", toCoords: "42.4557,-6.0563" },
+            { from: "Astorga", to: "Rabanal del Camino", km: 20.2, fromCoords: "42.4557,-6.0563", toCoords: "42.4819,-6.2861" },
+            { from: "Rabanal del Camino", to: "Molinaseca", km: 24.7, fromCoords: "42.4819,-6.2861", toCoords: "42.5399,-6.5185" },
+            { from: "Molinaseca", to: "Villafranca del Bierzo", km: 31.9, fromCoords: "42.5399,-6.5185", toCoords: "42.6069,-6.8114" },
+            { from: "Villafranca del Bierzo", to: "O Cebreiro", km: 27.8, fromCoords: "42.6069,-6.8114", toCoords: "42.7093,-7.0424" },
+            { from: "O Cebreiro", to: "Triacastela", km: 20.8, fromCoords: "42.7093,-7.0424", toCoords: "42.7561,-7.2384" },
+            { from: "Triacastela", to: "Sarria", km: 25.0, fromCoords: "42.7561,-7.2384", toCoords: "42.7797,-7.4138" },
+            { from: "Sarria", to: "Portomarin", km: 22.0, fromCoords: "42.7797,-7.4138", toCoords: "42.8087,-7.6178" },
+            { from: "Portomarin", to: "Palas de Rei", km: 25.0, fromCoords: "42.8087,-7.6178", toCoords: "42.8735,-7.8693" },
+            { from: "Palas de Rei", to: "Arzua", km: 30.0, fromCoords: "42.8735,-7.8693", toCoords: "42.9279,-8.1614" },
+            { from: "Arzua", to: "O Pedrouzo", km: 20.0, fromCoords: "42.9279,-8.1614", toCoords: "42.9068,-8.3615" },
+            { from: "O Pedrouzo", to: "Santiago de Compostela", km: 20.0, fromCoords: "42.9068,-8.3615", toCoords: "42.8782,-8.5448" }
         ];
 
         const stagesModal = document.getElementById('stagesModal');
@@ -846,26 +951,61 @@
         const closeStagesBtn = document.getElementById('closeStages');
         const stageList = document.getElementById('stageList');
 
+        const stagesListView = document.getElementById('stagesListView');
+        const stageDetailView = document.getElementById('stageDetailView');
+        const backToStagesBtn = document.getElementById('backToStages');
+
         function renderStages() {
             stageList.innerHTML = caminoStages.map((stage, i) => `
-                <li class="stage-item">
+                <li class="stage-item" onclick="showStageDetail(${i})">
                     <div class="stage-number">${i + 1}</div>
                     <div class="stage-info">
                         <div class="stage-route">${stage.from} &rarr; ${stage.to}</div>
                     </div>
                     <div class="stage-km">${stage.km} km</div>
+                    <div class="stage-chevron">&rsaquo;</div>
                 </li>
             `).join('');
         }
+
+        window.showStageDetail = function(index) {
+            const stage = caminoStages[index];
+            const stageNum = String(index + 1).padStart(2, '0');
+
+            document.getElementById('stageDetailTitle').textContent = 'Stage ' + (index + 1);
+            document.getElementById('stageDetailRoute').innerHTML = stage.from + ' &rarr; ' + stage.to;
+            document.getElementById('stageDetailDistance').textContent = stage.km + ' km';
+            document.getElementById('stageMapImg').src = 'images/stages/stage-' + stageNum + '-map.jpg';
+            document.getElementById('stageElevationImg').src = 'images/stages/stage-' + stageNum + '-elevation.jpg';
+
+            const mapsUrl = 'https://www.google.com/maps/dir/?api=1&origin=' + stage.fromCoords + '&destination=' + stage.toCoords + '&travelmode=walking';
+            document.getElementById('stageInteractiveMapLink').href = mapsUrl;
+
+            stagesListView.style.display = 'none';
+            stageDetailView.style.display = 'block';
+            document.querySelector('#stagesModal .modal-content').scrollTop = 0;
+        };
+
+        function closeStagesModal() {
+            stagesModal.classList.remove('active');
+            stageDetailView.style.display = 'none';
+            stagesListView.style.display = 'block';
+        }
+
+        backToStagesBtn.addEventListener('click', () => {
+            stageDetailView.style.display = 'none';
+            stagesListView.style.display = 'block';
+            document.querySelector('#stagesModal .modal-content').scrollTop = 0;
+        });
 
         stagesLink.addEventListener('click', () => {
             renderStages();
             stagesModal.classList.add('active');
         });
 
-        closeStagesBtn.addEventListener('click', () => stagesModal.classList.remove('active'));
+        closeStagesBtn.addEventListener('click', closeStagesModal);
         stagesModal.addEventListener('click', (e) => {
-            if (e.target === stagesModal) stagesModal.classList.remove('active');
+            if (e.target === stagesModal) closeStagesModal();
         });
 
         // ============================================
