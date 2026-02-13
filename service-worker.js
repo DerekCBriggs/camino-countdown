@@ -1,10 +1,10 @@
-const CACHE_NAME = 'camino-countdown-v1';
+const CACHE_NAME = 'camino-countdown-v2';
 const urlsToCache = [
-  '/',
-  '/index.html',
-  '/manifest.json',
-  '/icons/icon-192.png',
-  '/icons/icon-512.png'
+  './',
+  './index.html',
+  './manifest.json',
+  './icons/icon-192.png',
+  './icons/icon-512.png'
 ];
 
 // Install service worker and cache resources
@@ -61,7 +61,7 @@ self.addEventListener('fetch', event => {
             }
             // Return offline fallback for navigation requests
             if (event.request.mode === 'navigate') {
-              return caches.match('/index.html');
+              return caches.match('./index.html');
             }
           });
       })

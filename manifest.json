@@ -2,7 +2,7 @@
   "name": "Camino Countdown",
   "short_name": "Camino",
   "description": "Count down the days until your Camino de Santiago pilgrimage with daily facts and photos",
-  "start_url": "/",
+  "start_url": "./",
   "display": "standalone",
   "background_color": "#1E3A5F",
   "theme_color": "#1E3A5F",
