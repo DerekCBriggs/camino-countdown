@@ -659,6 +659,18 @@
                 <input type="date" id="targetDate">
             </div>
 
+            <div class="setting-group">
+                <label>Add Your Own Photos</label>
+                <p style="font-size: 0.85rem; color: var(--cream); margin-bottom: 10px; opacity: 0.8;">Upload photos to add them to the daily rotation.</p>
+                <label for="photoUpload" style="display: flex; align-items: center; justify-content: center; gap: 8px; padding: 12px; border: 2px dashed var(--gold); border-radius: 8px; cursor: pointer; color: var(--gold); font-weight: normal; transition: background 0.2s;">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M19 7v2.99s-1.99.01-2 0V7h-3s.01-1.99 0-2h3V2h2v3h3v2h-3zm-3 4V8h-3V5H5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-8h-3zM5 19l3-4 2 3 3-4 4 5H5z"/></svg>
+                    Choose Photos
+                </label>
+                <input type="file" id="photoUpload" accept="image/*" multiple style="display: none;">
+                <div id="uploadedPhotoCount" style="font-size: 0.85rem; color: var(--gold-light); margin-top: 8px;"></div>
+                <button id="clearPhotos" style="display: none; margin-top: 8px; padding: 8px 16px; background: transparent; border: 1px solid rgba(212,175,55,0.5); border-radius: 6px; color: var(--gold-light); cursor: pointer; font-size: 0.85rem;">Remove all uploaded photos</button>
+            </div>
+
             <button class="save-btn" id="saveSettings">Save Settings</button>
         </div>
     </div>
@@ -817,16 +829,33 @@
         // CURATED CAMINO PHOTOS
         // ============================================
         const defaultPhotos = [
-            { url: "https://images.unsplash.com/photo-1539635278303-d4002c07eae3?w=800", caption: "The path through the Spanish countryside" },
-            { url: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800", caption: "Santiago de Compostela Cathedral" },
-            { url: "https://images.unsplash.com/photo-1543783207-ec64e4d95325?w=800", caption: "Walking through the golden Meseta" },
-            { url: "https://images.unsplash.com/photo-1509023464722-18d996393ca8?w=800", caption: "Misty morning on the Camino" },
-            { url: "https://images.unsplash.com/photo-1559827291-72ee739d0d9a?w=800", caption: "Ancient stone pathway in Galicia" },
-            { url: "https://images.unsplash.com/photo-1570698473651-b2de99bae12f?w=800", caption: "Sunset over the Spanish plains" },
-            { url: "https://images.unsplash.com/photo-1552832230-c0197dd311b5?w=800", caption: "Historic village along the Way" },
-            { url: "https://images.unsplash.com/photo-1555881400-74d7acaacd8b?w=800", caption: "The rolling hills of northern Spain" },
-            { url: "https://images.unsplash.com/photo-1551918120-9739cb430c6d?w=800", caption: "Vineyards in the Rioja region" },
-            { url: "https://images.unsplash.com/photo-1504019347908-b45f9b0b8dd5?w=800", caption: "Crossing the Pyrenees" }
+            "images/40c79c3b-ece2-43b4-83d6-28dfbfd6260e.jpeg",
+            "images/7272dff9-7808-45ef-bc6e-37f687156c3c.jpeg",
+            "images/Crossing_the_Pyrenees.jpeg",
+            "images/dfff53b8-bb09-4d45-a73a-b58c3e83b1ab.jpeg",
+            "images/fb92fc53-1023-488e-b22d-6521d803dbc5.jpeg",
+            "images/IMG_7504.jpeg",
+            "images/IMG_7527.jpeg",
+            "images/IMG_7716.jpeg",
+            "images/IMG_7724.jpeg",
+            "images/IMG_7728.jpeg",
+            "images/IMG_7731.jpeg",
+            "images/IMG_7741.jpeg",
+            "images/IMG_7754.jpeg",
+            "images/IMG_7755.jpeg",
+            "images/IMG_7763.jpeg",
+            "images/IMG_7765.jpeg",
+            "images/IMG_7769.jpeg",
+            "images/IMG_7798.jpeg",
+            "images/IMG_7804.jpeg",
+            "images/IMG_7808.jpeg",
+            "images/IMG_7809.jpeg",
+            "images/IMG_7813.jpeg",
+            "images/IMG_7815.jpeg",
+            "images/IMG_7821.jpeg",
+            "images/IMG_7827.jpeg",
+            "images/IMG_7833.jpeg",
+            "images/IMG_7870.jpeg"
         ];
 
         // ============================================
@@ -873,12 +902,12 @@
             const factIndex = getDayOfYear() % caminoFacts.length;
             document.getElementById('dailyFact').textContent = caminoFacts[factIndex];
 
-            // Daily photo
-            const photoIndex = getDayOfYear() % defaultPhotos.length;
-            const photo = defaultPhotos[photoIndex];
-
-            document.getElementById('dailyPhoto').src = photo.url;
-            document.getElementById('photoCaption').textContent = photo.caption;
+            // Daily photo (combine default + user-uploaded photos)
+            const userPhotos = JSON.parse(localStorage.getItem('caminoUserPhotos') || '[]');
+            const allPhotos = defaultPhotos.concat(userPhotos);
+            const photoIndex = getDayOfYear() % allPhotos.length;
+            document.getElementById('dailyPhoto').src = allPhotos[photoIndex];
+            document.getElementById('photoCaption').textContent = "Views along the French Way";
         }
 
         // ============================================
@@ -892,6 +921,7 @@
 
         settingsBtn.addEventListener('click', () => {
             dateInput.value = targetDate;
+            updatePhotoCountDisplay();
             modal.classList.add('active');
         });
 
@@ -1006,6 +1036,73 @@
         closeStagesBtn.addEventListener('click', closeStagesModal);
         stagesModal.addEventListener('click', (e) => {
             if (e.target === stagesModal) closeStagesModal();
+        });
+
+        // ============================================
+        // PHOTO UPLOAD
+        // ============================================
+        const photoUpload = document.getElementById('photoUpload');
+        const uploadedPhotoCount = document.getElementById('uploadedPhotoCount');
+        const clearPhotosBtn = document.getElementById('clearPhotos');
+
+        function updatePhotoCountDisplay() {
+            const userPhotos = JSON.parse(localStorage.getItem('caminoUserPhotos') || '[]');
+            const count = userPhotos.length;
+            if (count > 0) {
+                uploadedPhotoCount.textContent = count + ' uploaded photo' + (count !== 1 ? 's' : '') + ' in rotation';
+                clearPhotosBtn.style.display = 'inline-block';
+            } else {
+                uploadedPhotoCount.textContent = '';
+                clearPhotosBtn.style.display = 'none';
+            }
+        }
+
+        photoUpload.addEventListener('change', (e) => {
+            const files = Array.from(e.target.files);
+            if (!files.length) return;
+
+            const userPhotos = JSON.parse(localStorage.getItem('caminoUserPhotos') || '[]');
+            let processed = 0;
+
+            files.forEach(file => {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    // Resize to save storage space
+                    const img = new Image();
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        const maxWidth = 1200;
+                        const scale = Math.min(1, maxWidth / img.width);
+                        canvas.width = img.width * scale;
+                        canvas.height = img.height * scale;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                        const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
+                        userPhotos.push(dataUrl);
+                        processed++;
+                        if (processed === files.length) {
+                            try {
+                                localStorage.setItem('caminoUserPhotos', JSON.stringify(userPhotos));
+                                updatePhotoCountDisplay();
+                                updateDisplay();
+                            } catch (err) {
+                                alert('Storage limit reached. Try uploading fewer or smaller photos.');
+                            }
+                        }
+                    };
+                    img.src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            });
+
+            // Reset input so same file can be re-selected
+            photoUpload.value = '';
+        });
+
+        clearPhotosBtn.addEventListener('click', () => {
+            localStorage.removeItem('caminoUserPhotos');
+            updatePhotoCountDisplay();
+            updateDisplay();
         });
 
         // ============================================
