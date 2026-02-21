@@ -135,6 +135,7 @@
             position: relative;
             aspect-ratio: 16/10;
             background: var(--blue-dark);
+            cursor: pointer;
         }
 
         .photo-section img {
@@ -862,6 +863,7 @@
         // APP STATE & FUNCTIONS
         // ============================================
         let targetDate = localStorage.getItem('caminoTargetDate') || '2026-05-22';
+        let currentPhotoIndex = -1; // tracks current photo; -1 means use daily default
 
         function formatDate(date) {
             const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
@@ -905,8 +907,10 @@
             // Daily photo (combine default + user-uploaded photos)
             const userPhotos = JSON.parse(localStorage.getItem('caminoUserPhotos') || '[]');
             const allPhotos = defaultPhotos.concat(userPhotos);
-            const photoIndex = getDayOfYear() % allPhotos.length;
-            document.getElementById('dailyPhoto').src = allPhotos[photoIndex];
+            if (currentPhotoIndex === -1) {
+                currentPhotoIndex = getDayOfYear() % allPhotos.length;
+            }
+            document.getElementById('dailyPhoto').src = allPhotos[currentPhotoIndex];
             document.getElementById('photoCaption').textContent = "Views along the French Way";
         }
 
@@ -1103,6 +1107,16 @@
             localStorage.removeItem('caminoUserPhotos');
             updatePhotoCountDisplay();
             updateDisplay();
+        });
+
+        // ============================================
+        // CYCLE PHOTOS ON TAP
+        // ============================================
+        document.querySelector('.photo-section').addEventListener('click', () => {
+            const userPhotos = JSON.parse(localStorage.getItem('caminoUserPhotos') || '[]');
+            const allPhotos = defaultPhotos.concat(userPhotos);
+            currentPhotoIndex = (currentPhotoIndex + 1) % allPhotos.length;
+            document.getElementById('dailyPhoto').src = allPhotos[currentPhotoIndex];
         });
 
         // ============================================
